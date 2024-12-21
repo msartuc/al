@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 
+
 class AlienInvasion:
     """ overall class to set up the game behaviour and variable """
 
@@ -15,7 +16,6 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         self.ship = Ship(self)
         
-
     def run_game(self):
         """ starts the main loop for the game """
         while True:
@@ -41,9 +41,7 @@ class AlienInvasion:
                     if event.key == pygame.K_RIGHT:
                         self.ship.moving_right = False
                     elif event.key == pygame.K_LEFT:
-                        self.ship.moving_left = False
-
-                
+                        self.ship.moving_left = False      
     
     def _update_screen(self):
         """ refreshes screen for each pass """
