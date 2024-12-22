@@ -23,6 +23,7 @@ class Settings:
         # game speed up rate
         self.speedup_scale = 1.5
         self.initialize_dynamic_settings()
+        self.alien_points = 50
 
     def initialize_dynamic_settings(self):
             self.ship_speed = 1.5
