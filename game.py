@@ -4,6 +4,8 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from time import sleep
+from game_stats import GameStats
 
 
 class AlienInvasion:
@@ -19,19 +21,24 @@ class AlienInvasion:
         #self.settings.screen_width = self.screen.get_rect().width
         #self.settings.screen_height = self.screen.get_rect().height 
         pygame.display.set_caption("Alien Invasion")
+        self.stats = GameStats(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
+        self.game_active = True
         
     def run_game(self):
         """ starts the main loop for the game """
         while True:
             """ listen to the keyboard and mouse """            
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
+            
+            if self.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+            
             self._update_screen()
             self.clock.tick(60)
 
@@ -110,7 +117,7 @@ class AlienInvasion:
         self._check_fleet_edges()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print("Ship Hit!!!")
+            self._ship_hit()
 
     def _check_bullet_alien_collisions(self):
         pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
@@ -127,6 +134,24 @@ class AlienInvasion:
         self.ship.blitme()
         self.aliens.draw(self.screen)
         pygame.display.flip()
+
+    def _ship_hit(self):
+
+        if self.stats.ship_left > 0:
+                self.stats.ship_left -= 1
+                self.bullets.empty()
+                self.aliens.empty()
+                self._create_fleet()
+                self.ship.center_ship()
+                sleep(1)
+        else:
+            self.game_active = False
+
+    def _check_aliens_bottom(self):
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= self.settings.screen_height:
+                self._ship_hit()
+                break
 
 if __name__ == '__main__':
     # make a game instance and run it
