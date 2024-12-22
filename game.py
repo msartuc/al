@@ -6,6 +6,7 @@ from bullet import Bullet
 from alien import Alien
 from time import sleep
 from game_stats import GameStats
+from button import Button
 
 
 class AlienInvasion:
@@ -26,14 +27,15 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.game_active = True
+        self.game_active = False
+        self.play_button = Button(self, "Play")
         
     def run_game(self):
         """ starts the main loop for the game """
         while True:
             """ listen to the keyboard and mouse """            
             self._check_events()
-            
+
             if self.game_active:
                 self.ship.update()
                 self._update_bullets()
@@ -133,6 +135,9 @@ class AlienInvasion:
     
         self.ship.blitme()
         self.aliens.draw(self.screen)
+
+        if not self.game_active:
+            self.play_button.draw_button()
         pygame.display.flip()
 
     def _ship_hit(self):
